@@ -13,19 +13,7 @@ let app = require('express')(),
     cors = require('cors'),
     usuarios = [],
     port = process.env.PORT || 8080,
-    salas = [{
-        id: 1,
-        usuarios: [1, 2]
-    }, {
-        id: 2,
-        usuarios: [3, 2]
-    }, {
-        id: 3,
-        usuarios: [1, 3]
-    }, {
-        id: 4,
-        usuarios: [1, 2, 3],
-    }],
+    salas = [],
     inicio = () => {
         app.use(cors());
         app.options('*', cors());
@@ -57,7 +45,7 @@ let app = require('express')(),
                 resultado: "listo"
             });
         });
-
+        // falta completar
         app.get('/nuevaSala', function(req, res) {
             let id = req.query.id, // id sala
                 u1 = req.query.usuario1, // quien invita
@@ -102,7 +90,7 @@ let app = require('express')(),
             if (salas[i].id == id_sala) {
                 return ok(salas[i].usuarios);
             }
-        request('http://localhost:3000/sala?id_sala=' + id_sala, (error, response, sala) => {
+        request('https://redtipsocket.herokuapp.com/sala?id_sala=' + id_sala, (error, response, sala) => {
             salas.push(sala);
             return ok(sala.usuarios);
         });
