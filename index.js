@@ -29,7 +29,7 @@ let app = require('express')(),
         app.use(cors());
         app.options('*', cors());
 
-        http.listen(80, () => console.log('Corriendo en *:80'));
+        http.listen(8000, () => console.log('Corriendo en *:80'));
 
         io.on('connection', socket => { // conectando socket
             if (socket.handshake.query.usuario !== undefined) {
