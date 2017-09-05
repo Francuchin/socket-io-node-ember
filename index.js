@@ -12,6 +12,7 @@ let app = require('express')(),
     request = require('request'),
     cors = require('cors'),
     usuarios = [],
+    port = process.env.PORT || 8080,
     salas = [{
         id: 1,
         usuarios: [1, 2]
@@ -29,7 +30,7 @@ let app = require('express')(),
         app.use(cors());
         app.options('*', cors());
 
-        http.listen(8000, () => console.log('Corriendo en *:80'));
+        http.listen(port, () => console.log('Corriendo en puerto ' + port));
 
         io.on('connection', socket => { // conectando socket
             if (socket.handshake.query.usuario !== undefined) {
