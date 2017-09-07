@@ -12,21 +12,18 @@ let app = require('express')(),
     request = require('request'),
     cors = require('cors'),
     usuarios = [],
-    port = process.env.PORT || 8080,
     salas = [],
+    port = process.env.PORT || 8080,
     inicio = () => {
         app.use(cors());
         app.options('*', cors());
-
         http.listen(port, () => console.log('Corriendo en puerto ' + port));
-
         io.on('connection', socket => { // conectando socket
             if (socket.handshake.query.usuario !== undefined) {
                 ingresaUusario(socket, socket.handshake.query.usuario)
                 socket.on('disconnect', () => saleUsuario(socket.handshake.query.usuario));
             }
         }); // fin conectando socket
-
         app.get('/mensaje', function(req, res) {
             let mensaje = req.query.mensaje,
                 usuario = req.query.usuario,
@@ -90,6 +87,7 @@ let app = require('express')(),
             if (salas[i].id == id_sala) {
                 return ok(salas[i].usuarios);
             }
+        console.log("rebuscando");
         request('https://redtipsocket.herokuapp.com/sala?id_sala=' + id_sala, (error, response, sala) => {
             salas.push(sala);
             return ok(sala.usuarios);
