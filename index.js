@@ -1,10 +1,12 @@
 'use strict'
 /*--- AUX ---*/
-Array.prototype.Remover = id => {
-    return Array.prototype.filter(el => {
-        return el.id !== id;
+
+function removeItem(array, id) {
+    array.forEach(function(result, index) {
+        if (array[index].id == id) array.splice(index, 1);
     });
-};
+}
+
 /*--- AUX ---*/
 let app = require('express')(),
     http = require('http').Server(app),
@@ -76,15 +78,6 @@ let app = require('express')(),
                 if (salas[i].id == id_sala) res.json(salas[i]);
             res.json([]);
         })
-        app.get('/login', function(req, res) {
-            let usuario = req.query.identification
-            let pass = req.query.password
-            res.json({
-                id: 1,
-                email: usuario,
-                password: pass
-            });
-        })
     },
     getUsuarios = id_sala => new Promise((ok) => {
         for (let i = 0; i < salas.length; i++)
@@ -99,6 +92,11 @@ let app = require('express')(),
     }),
     ingresaUusario = (socket, id_usuario) => {
         console.log("Se conecta usuario: " + id_usuario)
+        for (let i = 0; i < usuarios.length; i++)
+            if (id_usuario == usuarios[i].id) {
+                usuarios[i].socket = socket;
+                return;
+            }
         usuarios.push({
             id: id_usuario,
             socket: socket
@@ -106,6 +104,7 @@ let app = require('express')(),
     },
     saleUsuario = id_usuario => {
         //usuarios = usuarios.Remover(socket.handshake.query.usuario) // remuevo al usuario
+        removeItem(usuarios, id_usuario)
         console.log("Usuario " + id_usuario + " desconectada")
     }
 
