@@ -34,7 +34,7 @@ let app = require('express')(),
                 for (let i = 0; i < us.length; i++)
                     for (let j = 0; j < usuarios.length; j++)
                         if (us[i] == usuarios[j].id) {
-                            console.log("Enviado")
+                            console.log("Enviado a " + usuarios[j].id)
                             usuarios[j].socket.emit('mensaje', {
                                 id: usuario,
                                 texto: mensaje,
