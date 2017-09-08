@@ -28,15 +28,19 @@ let app = require('express')(),
             let mensaje = req.query.mensaje,
                 usuario = req.query.usuario,
                 sala = req.query.sala;
+            console.log("Enviando")
+            console.log(mensaje + " - " + usuario + " " + sala)
             getUsuarios(sala).then(us => {
                 for (let i = 0; i < us.length; i++)
                     for (let j = 0; j < usuarios.length; j++)
-                        if (us[i] == usuarios[j].id)
+                        if (us[i] == usuarios[j].id) {
+                            console.log("Enviado")
                             usuarios[j].socket.emit('mensaje', {
                                 id: usuario,
                                 texto: mensaje,
                                 sala: sala
                             });
+                        }
             });
             res.json({
                 resultado: "listo"
