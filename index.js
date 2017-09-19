@@ -1,11 +1,9 @@
 'use strict'
 /*--- AUX ---*/
 
-function removeItem(array, id) {
-    array.forEach(function(result, index) {
-        if (array[index].id == id) array.splice(index, 1);
-    });
-}
+let removeItem = (array, id) => array.forEach((result, index) => {
+    if (array[index].id == id) array.splice(index, 1);
+});
 
 /*--- AUX ---*/
 let app = require('express')(),
@@ -40,12 +38,7 @@ let ingresaUusario = (socket, id_usuario) => {
         socket: socket
     });
 }
-let saleUsuario = id_usuario => {
-    //usuarios = usuarios.Remover(socket.handshake.query.usuario) // remuevo al usuario
-    removeItem(usuarios, id_usuario)
-    console.log("Usuario " + id_usuario + " desconectada")
-}
-
+let saleUsuario = id_usuario => removeItem(usuarios, id_usuario)
 app.use(cors());
 app.options('*', cors());
 http.listen(port, () => console.log('Corriendo en puerto ' + port));
@@ -104,6 +97,9 @@ app.get('/nuevaSala', function(req, res) {
 app.get('/sala', function(req, res) {
     let id_sala = req.query.id_sala
     for (let i = 0; i < salas.length; i++)
-        if (salas[i].id == id_sala) res.json(salas[i]);
+        if (salas[i].id == id_sala) {
+            res.json(salas[i]);
+            return;
+        }
     res.json([]);
 })
