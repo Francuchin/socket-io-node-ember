@@ -12,8 +12,20 @@ let app = require('express')(),
     request = require('request'),
     cors = require('cors'),
     usuarios = [],
+    salas = [],
     port = process.env.PORT || 8080;
 
+let getUsuarios = id_sala => new Promise((ok) => {
+    for (let i = 0; i < salas.length; i++)
+        if (salas[i].id == id_sala) {
+            return ok(salas[i].usuarios);
+        }
+    console.log("rebuscando");
+    request('https://redtipsocket.herokuapp.com/sala?id_sala=' + id_sala, (error, response, sala) => {
+        salas.push(sala);
+        return ok(sala.usuarios);
+    });
+})
 let ingresaUusario = (socket, id_usuario) => {
     console.log("Se conecta usuario: " + id_usuario)
     for (let i = 0; i < usuarios.length; i++)
@@ -38,23 +50,27 @@ io.on('connection', socket => { // conectando socket
 }); // fin conectando socket
 app.get('/mensaje', function(req, res) {
     let mensaje = req.query.mensaje,
-        usuario1 = req.query.usuario1,
-        usuario2 = req.query.usuario2;
+        usuario = req.query.usuario,
+        sala = req.query.sala;
     console.log("Enviando")
-    console.log(mensaje + " - " + usuario1 + " a " + usuario2)
-    for (let j = 0; j < usuarios.length; j++)
-        if (usuario1 == usuarios[j].id || usuario2 == usuarios[j].id) {
-            usuarios[j].socket.emit('mensaje', {
-                texto: mensaje,
-                usuario1: usuario1,
-                usuario2: usuario2
-            });
-        }
+    console.log(mensaje + " - " + usuario + " " + sala)
+    getUsuarios(sala).then(us => {
+        for (let i = 0; i < us.length; i++)
+            for (let j = 0; j < usuarios.length; j++)
+                if (us[i] == usuarios[j].id) {
+                    console.log("Enviado a " + usuarios[j].id)
+                    usuarios[j].socket.emit('mensaje', {
+                        id: usuario,
+                        texto: mensaje,
+                        sala: sala
+                    });
+                }
+    });
     res.json({
         resultado: "listo"
     });
 });
-/* falta completar
+// falta completar
 app.get('/nuevaSala', function(req, res) {
     let id = req.query.id, // id sala
         u1 = req.query.usuario1, // quien invita
@@ -87,4 +103,3 @@ app.get('/sala', function(req, res) {
         }
     res.json([]);
 })
-*/
