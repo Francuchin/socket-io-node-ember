@@ -38,16 +38,16 @@ io.on('connection', socket => { // conectando socket
 }); // fin conectando socket
 app.get('/mensaje', function(req, res) {
     let mensaje = req.query.mensaje,
-        usuario1 = req.query.usuario1,
-        usuario2 = req.query.usuario2;
+        emisor = req.query.emisor,
+        receptor = req.query.receptor;
     console.log("Enviando")
-    console.log(mensaje + " - " + usuario1 + " a " + usuario2)
+    console.log(mensaje + " - " + emisor + " a " + receptor)
     for (let j = 0; j < usuarios.length; j++)
-        if (usuario1 == usuarios[j].id || usuario2 == usuarios[j].id) {
+        if (emisor == usuarios[j].id || receptor == usuarios[j].id) {
             usuarios[j].socket.emit('mensaje', {
                 texto: mensaje,
-                usuario1: usuario1,
-                usuario2: usuario2
+                emisor: emisor,
+                receptor: receptor
             });
         }
     res.json({
