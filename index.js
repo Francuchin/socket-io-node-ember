@@ -39,6 +39,7 @@ io.on('connection', socket => { // conectando socket
 app.get('/mensaje', function(req, res) {
     let mensaje = req.query.mensaje,
         emisor = req.query.emisor,
+        created_at = req.query.created_at,
         receptor = req.query.receptor;
     console.log("Enviando")
     console.log(mensaje + " - " + emisor + " a " + receptor)
@@ -47,6 +48,7 @@ app.get('/mensaje', function(req, res) {
             usuarios[j].socket.emit('mensaje', {
                 texto: mensaje,
                 emisor: emisor,
+                created_at: created_at,
                 receptor: receptor
             });
         }
